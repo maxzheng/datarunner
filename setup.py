@@ -9,7 +9,7 @@ setuptools.setup(
     author_email='maxzheng.os@gmail.com',
 
     description='Manages the running of reusable code',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
 
     url='https://github.com/maxzheng/cocaller',
 
