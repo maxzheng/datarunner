@@ -59,3 +59,5 @@ Links & Contact Info
 | PyPI Package: https://pypi.python.org/pypi/cocaller
 | GitHub Source: https://github.com/maxzheng/cocaller
 | Report Issues/Bugs: https://github.com/maxzheng/cocaller/issues
+|
+| Contact: https://www.linkedin.com/in/maxzheng
