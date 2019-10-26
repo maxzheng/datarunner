@@ -38,14 +38,14 @@ And then write a few callables (functions, classes, etc) that can be called, pas
             print(f'Loading {data}')
 
 
-    cc = Cocaller(setup,
-                  etl=[extract, transform, Load('example')])
-    cc.run()
+    Cocaller(setup,
+             etl=[extract, transform, Load('example')]).run()
 
 It should produce the following output::
 
     setup
     Ready to go!
+
     etl
       extract
       >> transform
@@ -60,4 +60,4 @@ Links & Contact Info
 | GitHub Source: https://github.com/maxzheng/cocaller
 | Report Issues/Bugs: https://github.com/maxzheng/cocaller/issues
 |
-| Contact: https://www.linkedin.com/in/maxzheng
+| Engineer: https://www.linkedin.com/in/maxzheng
