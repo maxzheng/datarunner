@@ -60,4 +60,4 @@ Links & Contact Info
 | GitHub Source: https://github.com/maxzheng/cocaller
 | Report Issues/Bugs: https://github.com/maxzheng/cocaller/issues
 |
-| Engineer: https://www.linkedin.com/in/maxzheng
+| Creator: https://www.linkedin.com/in/maxzheng

@@ -43,5 +43,5 @@ setuptools.setup(
       'Programming Language :: Python :: 3.7',
     ],
 
-    keywords='run call code concurrent',
+    keywords='run call code workflow',
 )
