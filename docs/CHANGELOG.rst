@@ -1,5 +1,13 @@
-Version 0.0.2
+Version 0.0.3
 ================================================================================
+
+* Add blank line before each callable series
+* Make ARC iterable
+* Better name and tests
+* Add contact link
+
+Version 0.0.2
+--------------------------------------------------------------------------------
 
 * Bump version
 * Rename readme to rst
