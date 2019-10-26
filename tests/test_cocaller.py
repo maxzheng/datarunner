@@ -28,6 +28,7 @@ def test_cocaller(capsys):
 
     transform = Mock(name='transform', return_value=3)
     cc = Cocaller(lambda: print("started"),
+                  [lambda: 1, transform, Load()],
                   etl=[lambda: 2, transform, Load()],
                   )
     result = cc.run()
@@ -40,6 +41,11 @@ def test_cocaller(capsys):
     assert """\
 <lambda>
 started
+
+<lambda>
+>> transform
+>> Load("dest")
+
 etl
   <lambda>
   >> transform

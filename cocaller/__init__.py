@@ -70,8 +70,11 @@ class Cocaller(ARC):
         """
         result = None
 
-        if not name:
-            name = self._guess_name(call_or_calls)
+        if callable(call_or_calls):
+            if not name:
+                name = self._guess_name(call_or_calls)
+        else:
+            print()
 
         if name:
             print(name)
