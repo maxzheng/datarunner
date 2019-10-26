@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name='cocaller',
-    version='0.0.4',
+    version='1.0.0',
 
     author='Max Zheng',
     author_email='maxzheng.os@gmail.com',
