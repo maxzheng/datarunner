@@ -25,6 +25,7 @@ def test_cocaller(capsys):
     assert result == 6
 
     out, err = capsys.readouterr()
+    print(out)
     assert """\
 <lambda>
 started
@@ -33,3 +34,22 @@ etl
   >> transform
   >> Load("dest")
 """ == out
+
+
+def test_guess_name():
+    assert Cocaller._guess_name(lambda: 1) == '<lambda>'
+    assert Cocaller._guess_name(print) == 'print'
+    assert Cocaller._guess_name(Mock(name='mocked')) == 'mocked'
+
+    class Step1(ARC):
+        pass
+    assert Cocaller._guess_name(Step1()) == 'Step1'
+
+    class Step2(ARC):
+        def __str__(self):
+            return 'Super Step'
+    assert Cocaller._guess_name(Step2()) == 'Super Step'
+
+    class Step3(ARC):
+        name = "Fast Step"
+    assert Cocaller._guess_name(Step3()) == 'Fast Step'
