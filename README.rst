@@ -1,7 +1,7 @@
 cocaller
 ========
 
-Manages the running of reusable code for building data pipelines.
+Easily build workflows to call plain Python code that encourages reuse and testing.
 
 Quick Start Tutorial
 ====================
@@ -10,11 +10,11 @@ Install using pip::
 
     pip install cocaller
 
-And then write a few callables (functions, classes, etc) that can be called, pass to `Cocaller`, and call run():
+Then write a few steps (functions, classes, etc) that can be called, pass to `cocaller.Workflow`, and call run():
 
 .. code-block:: python
 
-    from cocaller import Cocaller, ARC
+    from cocaller import Workflow, Step
 
 
     def setup():
@@ -26,8 +26,8 @@ And then write a few callables (functions, classes, etc) that can be called, pas
     def transform(data):
         return data + ' using reusable lego pieces.'
 
-    class Load(ARC):
-        """ Sub-class ARC (Abstract Runnable/Callable) to customize the callable """
+    class Load(Step):
+        """ Sub-class Step to customize the callable """
         def __init__(self, to_dataset):
             self.to_dataset = to_dataset
 
@@ -38,7 +38,7 @@ And then write a few callables (functions, classes, etc) that can be called, pas
             print(f'Loading {data}')
 
 
-    Cocaller(setup,
+    Workflow(setup,
              etl=[extract, transform, Load('example')]).run()
 
 It should produce the following output::

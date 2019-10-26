@@ -1,10 +1,10 @@
 from mock import Mock
 
-from cocaller import Cocaller, ARC
+from cocaller import Workflow, Step
 
 
 def test_arc():
-    class Lightning(ARC):
+    class Lightning(Step):
         def run(self):
             return [1, 2, 3]
 
@@ -15,19 +15,19 @@ def test_arc():
 
 
 def test_cocaller(capsys):
-    class Load(ARC):
+    class Load(Step):
         def __repr__(self):
             return 'Load("dest")'
 
         def run(self, num):
             return num * 2
 
-    class Finish(ARC):
+    class Finish(Step):
         def run(self):
             print('finished')
 
     transform = Mock(name='transform', return_value=3)
-    cc = Cocaller(lambda: print("started"),
+    cc = Workflow(lambda: print("started"),
                   [lambda: 1, transform, Load()],
                   etl=[lambda: 2, transform, Load()],
                   )
@@ -54,19 +54,19 @@ etl
 
 
 def test_guess_name():
-    assert Cocaller._guess_name(lambda: 1) == '<lambda>'
-    assert Cocaller._guess_name(print) == 'print'
-    assert Cocaller._guess_name(Mock(name='mocked')) == 'mocked'
+    assert Workflow._guess_name(lambda: 1) == '<lambda>'
+    assert Workflow._guess_name(print) == 'print'
+    assert Workflow._guess_name(Mock(name='mocked')) == 'mocked'
 
-    class Step1(ARC):
+    class Step1(Step):
         pass
-    assert Cocaller._guess_name(Step1()) == 'Step1'
+    assert Workflow._guess_name(Step1()) == 'Step1'
 
-    class Step2(ARC):
+    class Step2(Step):
         def __str__(self):
             return 'Super Step'
-    assert Cocaller._guess_name(Step2()) == 'Super Step'
+    assert Workflow._guess_name(Step2()) == 'Super Step'
 
-    class Step3(ARC):
+    class Step3(Step):
         name = "Fast Step"
-    assert Cocaller._guess_name(Step3()) == 'Fast Step'
+    assert Workflow._guess_name(Step3()) == 'Fast Step'

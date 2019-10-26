@@ -1,5 +1,5 @@
-class ARC:
-    """ Abstract Runnable/Callable (ARC) that provides a simple call interface """
+class Step:
+    """ Abstract step that is callable, runnable, and iterable """
     def __call__(self, *args, **kwargs):
         return self.run(*args, **kwargs)
 
@@ -10,7 +10,7 @@ class ARC:
         raise NotImplementedError('Sub-class must implement')
 
 
-class Cocaller(ARC):
+class Workflow(Step):
     """ Manages calling of reusable code """
     def __init__(self, *nameless_callables, **named_callables):
         """
