@@ -8,7 +8,7 @@ setuptools.setup(
     author='Max Zheng',
     author_email='maxzheng.os@gmail.com',
 
-    description='Manages the running of reusable code',
+    description='Easily build workflows to call plain Python code that encourages reuse and testing',
     long_description=open('README.rst').read(),
 
     url='https://github.com/maxzheng/cocaller',
