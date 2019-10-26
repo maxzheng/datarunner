@@ -3,6 +3,17 @@ from mock import Mock
 from cocaller import Cocaller, ARC
 
 
+def test_arc():
+    class Lightning(ARC):
+        def run(self):
+            return [1, 2, 3]
+
+    arc = Lightning()
+    assert arc() == [1, 2, 3]       # Callable
+    assert arc.run() == [1, 2, 3]   # Runnable
+    assert list(arc) == [1, 2, 3]   # Iterable
+
+
 def test_cocaller(capsys):
     class Load(ARC):
         def __repr__(self):

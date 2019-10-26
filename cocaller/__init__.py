@@ -3,6 +3,9 @@ class ARC:
     def __call__(self, *args, **kwargs):
         return self.run(*args, **kwargs)
 
+    def __iter__(self):
+        return iter(self.run())
+
     def run(self):
         raise NotImplementedError('Sub-class must implement')
 
