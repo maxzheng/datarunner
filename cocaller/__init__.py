@@ -1,101 +1,134 @@
 class Step:
     """ Abstract step that is callable, runnable, and iterable """
+    def __init__(self, callable_or_obj=None):
+        """
+        :param callable|object callable_or_obj: A callable to be called or an object to be returned when step is run.
+        """
+        if isinstance(callable_or_obj, Step):
+            raise ValueError(f'Must be a callable or an object, but got another Step instance: {callable_or_obj}')
+
+        self.callable_or_obj = callable_or_obj
+
     def __call__(self, *args, **kwargs):
+        self._print_name()
         return self.run(*args, **kwargs)
 
     def __iter__(self):
-        return iter(self.run())
+        return iter(self())
 
-    def run(self):
-        raise NotImplementedError('Sub-class must implement')
+    @classmethod
+    def instance(cls, obj):
+        return obj if isinstance(obj, cls) else Step(obj)
 
-
-class Workflow(Step):
-    """ Manages calling of reusable code """
-    def __init__(self, *nameless_callables, **named_callables):
-        """
-        :param list nameless_callables: List of callable code with name defaulting to the name of the callable itself.
-        :param dict named_callables: List of callable code with a given name.
-        """
-        self.nameless_callables = nameless_callables
-        self.named_callables = named_callables
-
-    @staticmethod
-    def _guess_name(call):
+    @property
+    def name(self):
         """ Guess the name of the callable """
-        if isinstance(call, (tuple, list)):
-            call = call[0]
-
-        name = str(call)
+        if not hasattr(self, 'callable_or_obj'):
+            raise RuntimeError('Step is not properly initialized. Please call `super().__init__()` in '
+                               f'`{self.__class__.__name__}.__init__()`')
+        co = self.callable_or_obj or self
+        name = str(co)
 
         # Name given by the developer
         if 'at 0x' not in name and 'Mock name' not in name and 'built-in ' not in name and '<class ' not in name:
             return name
 
         # Name attributes
-        for name_attr in ('_mock_name', 'name', '__name__'):
-            if hasattr(call, name_attr):
-                name = getattr(call, name_attr)
-                if name:  # It could be blank...
-                    return name
+        if self.callable_or_obj:
+            for name_attr in ('_mock_name', 'name', '__name__'):
+                if hasattr(co, name_attr):
+                    name = getattr(co, name_attr)
+                    if name:  # Ensure it actually has a value
+                        return name
 
         # Class name
-        if hasattr(call, '__class__'):
-            return call.__class__.__name__
+        if hasattr(co, '__class__'):
+            return co.__class__.__name__
 
         # Last resort
         return name
 
+    def _print_name(self):
+        print(self.name)
+
+    def run(self, *args, **kwargs):
+        if self.callable_or_obj:
+            return self.callable_or_obj(*args, **kwargs) if callable(self.callable_or_obj) else self.callable_or_obj
+
+        raise NotImplementedError('Please provide a callable or object when instantiating, or override this method.')
+
+
+class Flow(list, Step):
+    """ List of steps that will be run in serial with data being passed from one to another """
+    def __init__(self, *steps, name=None):
+        """
+        :param list steps: List of steps for the flow
+        :param str name: Name for the flow
+        """
+        super().__init__()
+        if steps:
+            self.extend([Step.instance(s) for s in steps])
+        self._name = name
+
+    def __rshift__(self, call):
+        self.append(Step.instance(call))
+        return self
+
+    def _print_name(self):
+        print()
+
+        if self._name:
+            print(self._name)
+            print('-' * 80)
+
+    @property
+    def name(self):
+        return self._name or len(self) and self[0].name or None
+
     def run(self):
-        """ Loop thru the nameless and named callables and run each callable/series """
         result = None
 
-        for call in self.nameless_callables:
-            result = self._do(call)
+        for i, step in enumerate(self):
+            if i == 0:
+                result = step()
 
-        for name, call in self.named_callables.items():
-            result = self._do(call, name=name)
+            else:
+                print('>> ', end='')
+                result = step(result)
 
         return result
 
-    def _do(self, call_or_calls, name=None):
+
+class Workflow(Flow):
+    """ Pythonic workflow engine that helps you write better ETL scripts  """
+    def __init__(self, *steps, **flows):
         """
-        Perform a call or a series of calls.
-
-        :param callable|list call_or_calls: A single callable to call or a list of callables to call in serial. If a
-                                            list is provided, the return value from the 1st call will be passed to the
-                                            2nd, and same for subsequent calls.
-        :param str name: Descriptive name for the call. If not provided, it will be guessed based on the callable name.
-        :return: Result from the last call
+        :param list steps: List of steps (any callable) to run
+        :param dict flows: Map of name to list of steps
         """
-        result = None
+        super().__init__()
+        self.steps = []
 
-        if callable(call_or_calls):
-            if not name:
-                name = self._guess_name(call_or_calls)
-        else:
-            print()
+        for step in steps:
+            if isinstance(step, (Step, Flow)):
+                self.steps.append(step)
+            elif callable(step):
+                self.steps.append(Step(step))
+            else:
+                self.steps.append(Flow(*step))
 
-        if name:
-            print(name)
-            indent = '  '
-        else:
-            indent = ''
+        for name, flow in flows.items():
+            self.steps.append(Flow(*flow, name=name))
 
-        if callable(call_or_calls):
-            result = call_or_calls()
+    def run(self):
+        """ Run all the steps """
+        if self.steps:
+            result = None
 
-        elif isinstance(call_or_calls, (tuple, list)):
-            for i, call in enumerate(call_or_calls):
-                if i == 0:
-                    print(indent, self._guess_name(call), sep='')
-                    result = call()
+            for step in self.steps:
+                result = step()
 
-                else:
-                    print(indent + '>>', self._guess_name(call))
-                    result = call(result)
+            return result
 
-        else:
-            raise ValueError(f'Expected a callable or list of callables, but got: {call_or_calls}')
-
-        return result
+        self._print_name()
+        return super().run()

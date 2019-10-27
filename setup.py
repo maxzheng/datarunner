@@ -8,7 +8,8 @@ setuptools.setup(
     author='Max Zheng',
     author_email='maxzheng.os@gmail.com',
 
-    description='Easily build workflows to call plain Python code that encourages reuse and testing',
+    description='A small, yet powerful, data workflow manager that helps you write better ETL scripts using reusable '
+                'and testable code.',
     long_description=open('README.rst').read(),
 
     url='https://github.com/maxzheng/cocaller',

@@ -1,7 +1,7 @@
 cocaller
 ========
 
-Easily build workflows to call plain Python code that encourages reuse and testing.
+A small, yet powerful, data workflow manager that helps you write better ETL scripts using reusable and testable code.
 
 Quick Start Tutorial
 ====================
@@ -29,6 +29,7 @@ Then write a few steps (functions, classes, etc) that can be called, pass to `co
     class Load(Step):
         """ Sub-class Step to customize the callable """
         def __init__(self, to_dataset):
+            super().__init__()
             self.to_dataset = to_dataset
 
         def __str__(self):
@@ -47,11 +48,18 @@ It should produce the following output::
     Ready to go!
 
     etl
-      extract
-      >> transform
-      >> Load("example")
+    --------------------------------------------------------------------------------
+    extract
+    >> transform
+    >> Load("example")
     Loading data using reusable lego pieces.
 
+If we skip `setup`, then we can also use `>>` operator to convey the same flow:
+
+.. code-block:: python
+
+    flow = Workflow() >> extract >> transform >> Load('example')
+    flow.run()
 
 Links & Contact Info
 ====================
