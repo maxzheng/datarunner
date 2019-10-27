@@ -1,7 +1,7 @@
 datarunner
 ==========
 
-A small, yet powerful, data workflow manager that helps you write better ETL scripts using reusable and testable code.
+A simple data workflow runner that helps you write better ETL scripts using reusable code pieces.
 
 Quick Start Tutorial
 ====================
@@ -24,7 +24,7 @@ Then write a few steps (functions, classes, etc) that can be called, pass to `da
         return 'data'
 
     def transform(data):
-        return data + ' using reusable lego pieces.'
+        return data + ' using reusable code pieces, like Lego.'
 
     class Load(Step):
         """ Sub-class Step to customize the callable """
@@ -52,7 +52,7 @@ It should produce the following output::
     extract
     >> transform
     >> Load("example")
-    Loading data using reusable lego pieces.
+    Loading data using reusable code pieces, like Lego.
 
 If we skip `setup`, then we can also use `>>` operator to convey the same flow:
 

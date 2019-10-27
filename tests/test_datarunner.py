@@ -137,7 +137,7 @@ def test_readme(capsys):
         return 'data'
 
     def transform(data):
-        return data + ' using reusable lego pieces.'
+        return data + ' using reusable code pieces, like Lego.'
 
     class Load(Step):
         """ Sub-class Step to customize the callable """
@@ -169,10 +169,10 @@ etl
 extract
 >> transform
 >> Load("example")
-Loading data using reusable lego pieces.
+Loading data using reusable code pieces, like Lego.
 
 extract
 >> transform
 >> Load("example")
-Loading data using reusable lego pieces.
+Loading data using reusable code pieces, like Lego.
 """ == out

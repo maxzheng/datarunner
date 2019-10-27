@@ -8,8 +8,7 @@ setuptools.setup(
     author='Max Zheng',
     author_email='maxzheng.os@gmail.com',
 
-    description='A small, yet powerful, data workflow manager that helps you write better ETL scripts using reusable '
-                'and testable code.',
+    description='A simple data workflow runner that helps you write better ETL scripts using reusable code pieces.',
     long_description=open('README.rst').read(),
 
     url='https://github.com/maxzheng/datarunner',
@@ -44,5 +43,5 @@ setuptools.setup(
       'Programming Language :: Python :: 3.7',
     ],
 
-    keywords='run call code workflow',
+    keywords='run call code workflow etl extract transform load',
 )
