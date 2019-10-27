@@ -1,5 +1,5 @@
-cocaller
-========
+datarunner
+==========
 
 A small, yet powerful, data workflow manager that helps you write better ETL scripts using reusable and testable code.
 
@@ -8,13 +8,13 @@ Quick Start Tutorial
 
 Install using pip::
 
-    pip install cocaller
+    pip install datarunner
 
-Then write a few steps (functions, classes, etc) that can be called, pass to `cocaller.Workflow`, and call run():
+Then write a few steps (functions, classes, etc) that can be called, pass to `datarunner.Workflow`, and call run():
 
 .. code-block:: python
 
-    from cocaller import Workflow, Step
+    from datarunner import Workflow, Step
 
 
     def setup():
@@ -64,8 +64,8 @@ If we skip `setup`, then we can also use `>>` operator to convey the same flow:
 Links & Contact Info
 ====================
 
-| PyPI Package: https://pypi.python.org/pypi/cocaller
-| GitHub Source: https://github.com/maxzheng/cocaller
-| Report Issues/Bugs: https://github.com/maxzheng/cocaller/issues
+| PyPI Package: https://pypi.python.org/pypi/datarunner
+| GitHub Source: https://github.com/maxzheng/datarunner
+| Report Issues/Bugs: https://github.com/maxzheng/datarunner/issues
 |
 | Creator: https://www.linkedin.com/in/maxzheng

@@ -1,6 +1,6 @@
 from mock import Mock
 
-from cocaller import Workflow, Flow, Step
+from datarunner import Workflow, Flow, Step
 
 
 def test_step():

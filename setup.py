@@ -2,7 +2,7 @@ import setuptools
 
 
 setuptools.setup(
-    name='cocaller',
+    name='datarunner',
     version='1.1.1',
 
     author='Max Zheng',
@@ -12,7 +12,7 @@ setuptools.setup(
                 'and testable code.',
     long_description=open('README.rst').read(),
 
-    url='https://github.com/maxzheng/cocaller',
+    url='https://github.com/maxzheng/datarunner',
 
     install_requires=open('requirements.txt').read(),
 
