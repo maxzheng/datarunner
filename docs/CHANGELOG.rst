@@ -1,5 +1,12 @@
-Version 1.1.0
+Version 1.1.1
 ================================================================================
+
+* Better description
+* Skip first blank line when printing flow name
+* Rename to datarunner
+
+Version 1.1.0
+--------------------------------------------------------------------------------
 
 * Add Flow to abstract list of steps and fully abstract each callable as a Step
 
