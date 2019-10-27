@@ -75,8 +75,6 @@ class Flow(list, Step):
         return self
 
     def _print_name(self):
-        print()
-
         if self._name:
             print(self._name)
             print('-' * 80)
@@ -125,7 +123,9 @@ class Workflow(Flow):
         if self.steps:
             result = None
 
-            for step in self.steps:
+            for i, step in enumerate(self.steps):
+                if i and isinstance(step, Flow):
+                    print()
                 result = step()
 
             return result

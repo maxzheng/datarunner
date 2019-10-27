@@ -41,7 +41,7 @@ def test_flow(capsys):
     flow()
     out, err = capsys.readouterr()
     print(out)
-    assert """
+    assert """\
 range(0, 3)
 >> print
 range(0, 3)
@@ -98,7 +98,7 @@ def test_workflow_as_flow(capsys):
     print(out)
 
     assert len(flow) == 4
-    assert """
+    assert """\
 range(0, 3)
 >> print
 range(0, 3)
@@ -116,7 +116,7 @@ def test_workflow_with_flow(capsys):
     out, err = capsys.readouterr()
     print(out)
 
-    assert """
+    assert """\
 range(0, 3)
 >> print
 range(0, 3)
@@ -154,6 +154,7 @@ def test_readme(capsys):
     Workflow(setup,
              etl=[extract, transform, Load('example')]).run()
 
+    print()
     flow = Workflow() >> extract >> transform >> Load('example')
     flow.run()
 
