@@ -92,6 +92,19 @@ class Flow(list, Step):
             print(self._name)
             print('-' * 80)
 
+    def __str__(self):
+        result = []
+
+        if self._name:
+            result.append(self._name)
+            result.append('-' * 80)
+
+        for i, step in enumerate(self):
+            prefix = '>> ' if i else ''
+            result.append(prefix + step.name)
+
+        return '\n'.join(result)
+
     @property
     def name(self):
         return self._name or len(self) and self[0].name or None
@@ -139,6 +152,19 @@ class Workflow(Flow):
 
         for name, flow in flows.items():
             self.flows.append(Flow(*flow, name=name))
+
+    def __str__(self):
+        if len(self):
+            self.flows.append(Flow(*self))
+
+        result = []
+
+        for i, flow in enumerate(self.flows):
+            if i:
+                result.append('')
+            result.append(str(flow))
+
+        return '\n'.join(result) + '\n'
 
     def run(self, **replacements):
         """

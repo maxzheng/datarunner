@@ -64,10 +64,12 @@ def test_workflow_basics(capsys):
             print('finished')
 
     transform = Mock(name='transform', return_value=3)
-    result = Workflow(lambda: print("started"),
-                      [lambda: 1, transform, Load()],
-                      etl=[lambda: 2, transform, Load()],
-                      ).run()
+    flow = Workflow(lambda: print("started"),
+                    [lambda: 1, transform, Load()],
+                    etl=[lambda: 2, transform, Load()],
+                    )
+
+    result = flow.run()
 
     transform.assert_called_with(2)
     assert result == 6
@@ -88,6 +90,21 @@ etl
 >> transform
 >> Load("dest")
 """ == out
+
+    print(flow)
+    assert """\
+<lambda>
+
+<lambda>
+>> transform
+>> Load("dest")
+
+etl
+--------------------------------------------------------------------------------
+<lambda>
+>> transform
+>> Load("dest")
+""" == str(flow)
 
 
 def test_workflow_as_flow(capsys):
