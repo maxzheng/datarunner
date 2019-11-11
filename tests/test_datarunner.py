@@ -129,6 +129,23 @@ range(0, 6)
 """ == out
 
 
+def test_workflow_templates():
+    class TemplatedStep(Step):
+        TEMPLATE_ATTRS = ['query']
+
+        def __init__(self, query):
+            super().__init__()
+            self.query = query
+
+        def run(self):
+            return self.query
+
+    flow = Workflow() >> TemplatedStep('SELECT * FROM {dataset}.table')
+    result = flow.run(dataset='foo')
+
+    assert result == 'SELECT * FROM foo.table'
+
+
 def test_readme(capsys):
     def setup():
         print('Ready to go!')

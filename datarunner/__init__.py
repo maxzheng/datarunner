@@ -1,5 +1,8 @@
 class Step:
     """ Abstract step that is callable, runnable, and iterable """
+    #: List of attributes that is using templates. The template will be replaced with an actual value before running.
+    TEMPLATE_ATTRS = []
+
     def __init__(self, callable_or_obj=None):
         """
         :param callable|object callable_or_obj: A callable to be called or an object to be returned when step is run.
@@ -51,6 +54,16 @@ class Step:
     def _print_name(self):
         print(self.name)
 
+    def _replace_templates(self, replacements):
+        """
+        Replace templated attributs with their values
+
+        :param dic replacements: Map of template attribute to value
+        """
+        for attr in self.TEMPLATE_ATTRS:
+            attribute = getattr(self, attr)
+            setattr(self, attr, attribute.format(**replacements))
+
     def run(self, *args, **kwargs):
         if self.callable_or_obj:
             return self.callable_or_obj(*args, **kwargs) if callable(self.callable_or_obj) else self.callable_or_obj
@@ -83,10 +96,17 @@ class Flow(list, Step):
     def name(self):
         return self._name or len(self) and self[0].name or None
 
-    def run(self):
+    def run(self, **replacements):
+        """
+        Run all the steps
+
+        :param dict replacements: Replacement values for template variables.
+        """
         result = None
 
         for i, step in enumerate(self):
+            step._replace_templates(replacements)
+
             if i == 0:
                 result = step()
 
@@ -98,37 +118,42 @@ class Flow(list, Step):
 
 
 class Workflow(Flow):
-    """ Pythonic workflow engine that helps you write better ETL scripts  """
+    """ Simple data workflow engine that helps you write better ETL scripts  """
     def __init__(self, *steps, **flows):
         """
         :param list steps: List of steps (any callable) to run
         :param dict flows: Map of name to list of steps
         """
         super().__init__()
-        self.steps = []
+        self.flows = []
 
         for step in steps:
-            if isinstance(step, (Step, Flow)):
-                self.steps.append(step)
+            if isinstance(step, Step):
+                self.flows.append(Flow(step))
+            elif isinstance(step, Flow):
+                self.flows.append(step)
             elif callable(step):
-                self.steps.append(Step(step))
+                self.flows.append(Flow(Step(step)))
             else:
-                self.steps.append(Flow(*step))
+                self.flows.append(Flow(*step))
 
         for name, flow in flows.items():
-            self.steps.append(Flow(*flow, name=name))
+            self.flows.append(Flow(*flow, name=name))
 
-    def run(self):
-        """ Run all the steps """
-        if self.steps:
-            result = None
+    def run(self, **replacements):
+        """
+        Run all the steps
 
-            for i, step in enumerate(self.steps):
-                if i and isinstance(step, Flow):
-                    print()
-                result = step()
+        :param dict replacements: Replacement values for template variables.
+        """
+        if len(self):
+            self.flows.append(Flow(*self))
 
-            return result
+        result = None
 
-        self._print_name()
-        return super().run()
+        for i, flow in enumerate(self.flows):
+            if i:
+                print()
+            result = flow(**replacements)
+
+        return result
