@@ -101,7 +101,7 @@ And finally, to test the workflow::
 Workflow Layout
 ===============
 
-When writing production workflows, it is recommended to layout the files in your package like::
+A recommended file layout for your ETL package::
 
    my_package/steps/__init__.py            # Generic / common steps
    my_package/steps/bigquery.py            # Group of steps for a specific service, like BigQuery.
