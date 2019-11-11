@@ -58,7 +58,11 @@ We can also use `>>` operator to convey the same flow:
 
 .. code-block:: python
 
-    flow = Workflow() >> extract >> transform >> Load('example')
+    flow = (Workflow()
+            >> setup
+
+            << 'table_name1'
+            >> extract >> transform >> Load('example'))
     flow.run()
 
 To make the workflow more flexible (e.g. write to different dataset), use templates to provide some values at run time:
