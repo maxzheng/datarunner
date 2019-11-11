@@ -103,8 +103,7 @@ etl
 --------------------------------------------------------------------------------
 <lambda>
 >> transform
->> Load("dest")
-""" == str(flow)
+>> Load("dest")""" == str(flow)
 
 
 def test_workflow_as_flow(capsys):
@@ -125,6 +124,13 @@ range(0, 3)
 >> print
 range(0, 6)
 """ == out
+
+    flow = Workflow(name='named') >> 1 >> print
+    assert """\
+named
+--------------------------------------------------------------------------------
+1
+>> print""" == str(flow)
 
 
 def test_workflow_with_flow(capsys):
@@ -259,5 +265,4 @@ Loading data using reusable code pieces, like Lego.
     assert """\
 extract
 >> transform
->> Load("staging.table_name1")
-""" == str(flow)
+>> Load("staging.table_name1")""" == str(flow)

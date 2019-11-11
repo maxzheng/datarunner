@@ -133,12 +133,17 @@ class Flow(list, Step):
 
 class Workflow(Flow):
     """ Simple data workflow engine that helps you write better ETL scripts  """
-    def __init__(self, *steps, **flows):
+    def __init__(self, *steps, name=None, **flows):
         """
         :param list steps: List of steps (any callable) to run
+        :param str name: Name for the flow when using ">>" operator.
         :param dict flows: Map of name to list of steps
         """
-        super().__init__()
+        if name and not isinstance(name, str):
+            flows['name'] = name
+            name = None
+
+        super().__init__(name=name)
         self.flows = []
 
         for step in steps:
@@ -156,7 +161,7 @@ class Workflow(Flow):
 
     def _merge_flow(self):
         if len(self):
-            self.flows.append(Flow(*self))
+            self.flows.append(Flow(*self, name=self._name))
             self.clear()
 
     def __str__(self):
@@ -168,7 +173,7 @@ class Workflow(Flow):
                 result.append('')
             result.append(str(flow))
 
-        return '\n'.join(result) + '\n'
+        return '\n'.join(result)
 
     def run(self, **replacements):
         """

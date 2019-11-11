@@ -42,7 +42,7 @@ Then write a few steps (functions, classes, etc) that can be called, pass to `da
                     table_name1=[extract, transform, Load('example')])
     flow.run()
 
-It should produce the following output::
+It produces the following output::
 
     setup
     Ready to go!
@@ -54,7 +54,7 @@ It should produce the following output::
     >> Load("example")
     Loading data using reusable code pieces, like Lego.
 
-If we skip `setup`, then we can also use `>>` operator to convey the same flow:
+We can also use `>>` operator to convey the same flow:
 
 .. code-block:: python
 
@@ -92,11 +92,10 @@ It produces the following output::
 And finally, to test the workflow::
 
    def test_flow():
-      assert """
+      assert """\
    extract
    >> transform
-   >> Load("{dataset}.table_name1")
-   """ == str(flow)
+   >> Load("{dataset}.table_name1")""" == str(flow)
 
 Workflow Layout
 ===============
