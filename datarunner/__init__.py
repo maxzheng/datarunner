@@ -62,7 +62,8 @@ class Step:
         """
         for attr in self.TEMPLATE_ATTRS:
             attribute = getattr(self, attr)
-            setattr(self, attr, attribute.format(**replacements))
+            if isinstance(attribute, str):
+                setattr(self, attr, attribute.format(**replacements))
 
     def run(self, *args, **kwargs):
         if self.callable_or_obj:
