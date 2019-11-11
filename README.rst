@@ -89,14 +89,28 @@ It produces the following output::
    >> Load("staging.table_name1")
    Loading data using reusable code pieces, like Lego.
 
-Finally, to test the workflow::
+And finally, to test the workflow::
 
    def test_flow():
       assert """
-      extract
-      >> transform
-      >> Load("{dataset}.table_name1")
-      """ == str(flow)
+   extract
+   >> transform
+   >> Load("{dataset}.table_name1")
+   """ == str(flow)
+
+Workflow Layout
+===============
+
+When writing production workflows, it is recommended to layout the files in your package like::
+
+   my_package/steps/__init__.py            # Generic / common steps
+   my_package/steps/bigquery.py            # Group of steps for a specific service, like BigQuery.
+   my_package/datasource1.py               # ETL workflow for a single data source with steps specifc for the source
+   my_package/datasource2.py               # ETL workflow for another data source
+
+Inside of `datasource*.py`, it should define `flow = Workflow(...)`, but not run. From your ETL script, it should call
+`flow.run()` to run the workflow. This ensures the workflow is properly constructed when imported and can be used for
+testing without running it.
 
 Links & Contact Info
 ====================
