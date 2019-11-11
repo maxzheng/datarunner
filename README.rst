@@ -115,7 +115,7 @@ testing without running it.
 Links & Contact Info
 ====================
 
-| PyPI Package: https://pypi.python.org/pypi/datarunner
+| PyPI Package: https://pypi.org/project/datarunner/
 | GitHub Source: https://github.com/maxzheng/datarunner
 | Report Issues/Bugs: https://github.com/maxzheng/datarunner/issues
 |
