@@ -157,6 +157,7 @@ class Workflow(Flow):
     def __str__(self):
         if len(self):
             self.flows.append(Flow(*self))
+            self.clear()
 
         result = []
 
@@ -175,6 +176,7 @@ class Workflow(Flow):
         """
         if len(self):
             self.flows.append(Flow(*self))
+            self.clear()
 
         result = None
 

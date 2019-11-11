@@ -114,7 +114,9 @@ def test_workflow_as_flow(capsys):
     out, err = capsys.readouterr()
     print(out)
 
-    assert len(flow) == 4
+    assert len(flow) == 0
+    assert len(flow.flows) == 1
+
     assert """\
 range(0, 3)
 >> print
@@ -175,18 +177,19 @@ def test_readme(capsys):
 
     class Load(Step):
         """ Sub-class Step to customize the callable """
-        def __init__(self, to_dataset):
+        def __init__(self, destination):
             super().__init__()
-            self.to_dataset = to_dataset
+            self.destination = destination
 
         def __str__(self):
-            return f'Load("{self.to_dataset}")'
+            return f'Load("{self.destination}")'
 
         def run(self, data):
             print(f'Loading {data}')
 
-    Workflow(setup,
-             etl=[extract, transform, Load('example')]).run()
+    flow = Workflow(setup,
+                    table_name1=[extract, transform, Load('example')])
+    flow.run()
 
     print()
     flow = Workflow() >> extract >> transform >> Load('example')
@@ -198,7 +201,7 @@ def test_readme(capsys):
 setup
 Ready to go!
 
-etl
+table_name1
 --------------------------------------------------------------------------------
 extract
 >> transform
@@ -210,3 +213,51 @@ extract
 >> Load("example")
 Loading data using reusable code pieces, like Lego.
 """ == out
+
+    class Load(Step):
+        TEMPLATE_ATTRS = ['destination']
+
+        """ Sub-class Step to customize the callable """
+        def __init__(self, destination):
+            super().__init__()
+            self.destination = destination
+
+        def __str__(self):
+            return f'Load("{self.destination}")'
+
+        def run(self, data):
+            print(f'Loading {data}')
+
+    flow = Workflow() >> extract >> transform >> Load('{dataset}.table_name1')
+    flow.run(dataset='staging')
+
+    out, err = capsys.readouterr()
+    print(out)
+    assert """\
+setup
+Ready to go!
+
+table_name1
+--------------------------------------------------------------------------------
+extract
+>> transform
+>> Load("example")
+Loading data using reusable code pieces, like Lego.
+
+extract
+>> transform
+>> Load("example")
+Loading data using reusable code pieces, like Lego.
+
+extract
+>> transform
+>> Load("staging.table_name1")
+Loading data using reusable code pieces, like Lego.
+""" == out
+
+    print(flow)
+    assert """\
+extract
+>> transform
+>> Load("staging.table_name1")
+""" == str(flow)
