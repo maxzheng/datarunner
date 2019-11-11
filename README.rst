@@ -61,7 +61,7 @@ If we skip `setup`, then we can also use `>>` operator to convey the same flow:
     flow = Workflow() >> extract >> transform >> Load('example')
     flow.run()
 
-We can take a step further by using templates to provide some information at run time:
+To make the workflow more flexible (e.g. write to different dataset), use templates to provide some values at run time:
 
 .. code-block:: python
 
