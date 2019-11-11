@@ -1,5 +1,10 @@
-Version 1.1.2
+Version 1.1.3
 ================================================================================
+
+* Add template and test example
+
+Version 1.1.2
+--------------------------------------------------------------------------------
 
 * Only replace str attributes
 * Add __str__ for Flow and Workflow
