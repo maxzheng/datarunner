@@ -1,3 +1,13 @@
+Version 1.2.0
+================================================================================
+
+* Add use of lshift to readme and tests
+* Change Flow and Workflow to inherit from list only
+* Support setting name for workflow
+* Update package URL
+* Better wording for recommended layout
+* Add _merge_flow to avoid duplicating code
+
 Version 1.1.5
 ================================================================================
 
