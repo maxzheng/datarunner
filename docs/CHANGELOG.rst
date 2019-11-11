@@ -1,5 +1,12 @@
-Version 1.1.1
+Version 1.1.2
 ================================================================================
+
+* Only replace str attributes
+* Add __str__ for Flow and Workflow
+* Support template attributes
+
+Version 1.1.1
+--------------------------------------------------------------------------------
 
 * Better description
 * Skip first blank line when printing flow name
