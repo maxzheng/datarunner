@@ -154,11 +154,13 @@ class Workflow(Flow):
         for name, flow in flows.items():
             self.flows.append(Flow(*flow, name=name))
 
-    def __str__(self):
+    def _merge_flow(self):
         if len(self):
             self.flows.append(Flow(*self))
             self.clear()
 
+    def __str__(self):
+        self._merge_flow()
         result = []
 
         for i, flow in enumerate(self.flows):
@@ -174,10 +176,7 @@ class Workflow(Flow):
 
         :param dict replacements: Replacement values for template variables.
         """
-        if len(self):
-            self.flows.append(Flow(*self))
-            self.clear()
-
+        self._merge_flow()
         result = None
 
         for i, flow in enumerate(self.flows):
