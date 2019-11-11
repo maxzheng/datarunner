@@ -38,7 +38,7 @@ def test_flow(capsys):
     flow >> range(6) >> print
     assert len(flow) == 4
 
-    flow()
+    flow.run()
     out, err = capsys.readouterr()
     print(out)
     assert """\
@@ -113,8 +113,7 @@ def test_workflow_as_flow(capsys):
     out, err = capsys.readouterr()
     print(out)
 
-    assert len(flow) == 0
-    assert len(flow.flows) == 1
+    assert len(flow) == 1
 
     assert """\
 range(0, 3)

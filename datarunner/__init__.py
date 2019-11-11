@@ -72,14 +72,13 @@ class Step:
         raise NotImplementedError('Please provide a callable or object when instantiating, or override this method.')
 
 
-class Flow(list, Step):
+class Flow(list):
     """ List of steps that will be run in serial with data being passed from one to another """
     def __init__(self, *steps, name=None):
         """
         :param list steps: List of steps for the flow
         :param str name: Name for the flow
         """
-        super().__init__()
         if steps:
             self.extend([Step.instance(s) for s in steps])
         self._name = name
@@ -87,11 +86,6 @@ class Flow(list, Step):
     def __rshift__(self, call):
         self.append(Step.instance(call))
         return self
-
-    def _print_name(self):
-        if self._name:
-            print(self._name)
-            print('-' * 80)
 
     def __str__(self):
         result = []
@@ -116,6 +110,10 @@ class Flow(list, Step):
 
         :param dict replacements: Replacement values for template variables.
         """
+        if self._name:
+            print(self._name)
+            print('-' * 80)
+
         result = None
 
         for i, step in enumerate(self):
@@ -131,7 +129,7 @@ class Flow(list, Step):
         return result
 
 
-class Workflow(Flow):
+class Workflow(list):
     """ Simple data workflow engine that helps you write better ETL scripts  """
     def __init__(self, *steps, name=None, **flows):
         """
@@ -143,37 +141,45 @@ class Workflow(Flow):
             flows['name'] = name
             name = None
 
-        super().__init__(name=name)
-        self.flows = []
+        self._flow = Flow(name=name)
 
         for step in steps:
             if isinstance(step, Step):
-                self.flows.append(Flow(step))
+                self.append(Flow(step))
             elif isinstance(step, Flow):
-                self.flows.append(step)
+                self.append(step)
             elif callable(step):
-                self.flows.append(Flow(Step(step)))
+                self.append(Flow(Step(step)))
             else:
-                self.flows.append(Flow(*step))
+                self.append(Flow(*step))
 
         for name, flow in flows.items():
-            self.flows.append(Flow(*flow, name=name))
+            self.append(Flow(*flow, name=name))
 
-    def _merge_flow(self):
-        if len(self):
-            self.flows.append(Flow(*self, name=self._name))
-            self.clear()
+    def __lshift__(self, name):
+        self._merge_flow()
+        self._flow._name = name
+        return self
+
+    def __rshift__(self, call):
+        self._flow.append(Step.instance(call))
+        return self
 
     def __str__(self):
         self._merge_flow()
         result = []
 
-        for i, flow in enumerate(self.flows):
+        for i, flow in enumerate(self):
             if i:
                 result.append('')
             result.append(str(flow))
 
         return '\n'.join(result)
+
+    def _merge_flow(self):
+        if self._flow:
+            self.append(self._flow)
+            self._flow = Flow()
 
     def run(self, **replacements):
         """
@@ -184,9 +190,9 @@ class Workflow(Flow):
         self._merge_flow()
         result = None
 
-        for i, flow in enumerate(self.flows):
+        for i, flow in enumerate(self):
             if i:
                 print()
-            result = flow(**replacements)
+            result = flow.run(**replacements)
 
         return result
