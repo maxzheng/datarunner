@@ -105,6 +105,26 @@ etl
 >> transform
 >> Load("dest")""" == str(flow)
 
+    flow.extend([1, 2, 3])
+
+    print(flow)
+    assert """\
+<lambda>
+
+<lambda>
+>> transform
+>> Load("dest")
+
+etl
+--------------------------------------------------------------------------------
+<lambda>
+>> transform
+>> Load("dest")
+
+1
+>> 2
+>> 3""" == str(flow)
+
 
 def test_workflow_as_flow(capsys):
     flow = Workflow() >> range(3) >> print >> range(6) >> print

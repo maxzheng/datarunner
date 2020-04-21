@@ -143,15 +143,7 @@ class Workflow(list):
 
         self._flow = Flow(name=name)
 
-        for step in steps:
-            if isinstance(step, Step):
-                self.append(Flow(step))
-            elif isinstance(step, Flow):
-                self.append(step)
-            elif callable(step):
-                self.append(Flow(Step(step)))
-            else:
-                self.append(Flow(*step))
+        self.extend(*steps)
 
         for name, flow in flows.items():
             self.append(Flow(*flow, name=name))
@@ -180,6 +172,18 @@ class Workflow(list):
         if self._flow:
             self.append(self._flow)
             self._flow = Flow()
+
+    def extend(self, *steps):
+        for step in steps:
+            if isinstance(step, Step):
+                self.append(Flow(step))
+            elif isinstance(step, Flow):
+                self.append(step)
+            elif callable(step):
+                self.append(Flow(Step(step)))
+            else:
+                self.append(Flow(*step))
+        return self
 
     def run(self, **replacements):
         """
