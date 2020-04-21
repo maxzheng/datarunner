@@ -105,7 +105,9 @@ etl
 >> transform
 >> Load("dest")""" == str(flow)
 
-    flow.extend([1, 2, 3])
+    flow << 'new flow'  # Ensure this flow is merged before the extend so order is correct
+    flow >> 1 >> 2
+    flow.extend([3, 4, 5])
 
     print(flow)
     assert """\
@@ -121,9 +123,14 @@ etl
 >> transform
 >> Load("dest")
 
+new flow
+--------------------------------------------------------------------------------
 1
 >> 2
->> 3""" == str(flow)
+
+3
+>> 4
+>> 5""" == str(flow)
 
 
 def test_workflow_as_flow(capsys):

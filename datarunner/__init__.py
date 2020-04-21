@@ -174,6 +174,7 @@ class Workflow(list):
             self._flow = Flow()
 
     def extend(self, *steps):
+        self._merge_flow()
         for step in steps:
             if isinstance(step, Step):
                 self.append(Flow(step))
