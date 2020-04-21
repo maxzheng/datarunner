@@ -1,5 +1,10 @@
-Version 1.2.1
+Version 1.2.2
 ================================================================================
+
+* Merge existing flow before extend
+
+Version 1.2.1
+--------------------------------------------------------------------------------
 
 * Add extend to extend a list of steps to workflow
 
