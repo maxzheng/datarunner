@@ -1,5 +1,10 @@
-Version 1.2.0
+Version 1.2.1
 ================================================================================
+
+* Add extend to extend a list of steps to workflow
+
+Version 1.2.0
+--------------------------------------------------------------------------------
 
 * Add use of lshift to readme and tests
 * Change Flow and Workflow to inherit from list only
