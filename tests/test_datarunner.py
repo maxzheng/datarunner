@@ -32,13 +32,17 @@ def test_step():
 
 
 def test_flow(capsys):
+    def foobar(args, foo=None):
+        return (args, foo)
+
     flow = Flow(range(3), print)
     assert len(flow) == 2
 
-    flow >> range(6) >> print
-    assert len(flow) == 4
+    flow >> range(6) >> foobar >> print
+    assert len(flow) == 5
 
-    flow.run()
+    flow.run(foo='bar')
+
     out, err = capsys.readouterr()
     print(out)
     assert """\
@@ -46,8 +50,9 @@ range(0, 3)
 >> print
 range(0, 3)
 >> range(0, 6)
+>> foobar
 >> print
-range(0, 6)
+(range(0, 6), 'bar')
 """ == out
 
 

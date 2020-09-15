@@ -1,3 +1,6 @@
+import inspect
+
+
 class Step:
     """ Abstract step that is callable, runnable, and iterable """
     #: List of attributes that is using templates. The template will be replaced with an actual value before running.
@@ -119,12 +122,23 @@ class Flow(list):
         for i, step in enumerate(self):
             step._replace_templates(replacements)
 
+            step_params = {}
+            try:
+                if replacements and callable(step.callable_or_obj):
+                    candidate_names = [p.name for p in inspect.signature(step.callable_or_obj).parameters.values()
+                                       if p.default != p.empty]
+                    common_names = set(replacements) & set(candidate_names)
+                    step_params = dict((k, v) for k, v in replacements.items() if k in common_names)
+
+            except Exception:
+                pass
+
             if i == 0:
-                result = step()
+                result = step(**step_params)
 
             else:
                 print('>> ', end='')
-                result = step(result)
+                result = step(result, **step_params)
 
         return result
 
