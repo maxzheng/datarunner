@@ -239,10 +239,10 @@ def test_workflow_templates():
         def run(self):
             return self.query
 
-    flow = Workflow() >> TemplatedStep('SELECT * FROM {dataset}.table')
-    result = flow.run(dataset='foo')
+    flow = Workflow() >> TemplatedStep('SELECT * FROM {dataset}.table WHERE date = "{date}" OR date = "{date_}"')
+    result = flow.run(dataset='foo', date='2020-01-02')
 
-    assert result == 'SELECT * FROM foo.table'
+    assert result == 'SELECT * FROM foo.table WHERE date = "2020-01-02" OR date = "20200102"'
 
 
 def test_readme(capsys):

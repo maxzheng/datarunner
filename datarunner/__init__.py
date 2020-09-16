@@ -209,6 +209,10 @@ class Workflow(list):
         self._merge_flow()
         result = None
 
+        for key, value in list(replacements.items()):
+            if '-' in value and (key + '_') not in replacements:
+                replacements[key + '_'] = value.replace('-', '')
+
         for i, flow in enumerate(self):
             if i:
                 print()
