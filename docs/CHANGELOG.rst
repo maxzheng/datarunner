@@ -1,5 +1,10 @@
-Version 1.2.3
+Version 1.2.4
 ================================================================================
+
+* Add special var to strip hyphen from replacement values
+
+Version 1.2.3
+--------------------------------------------------------------------------------
 
 * Support passing optional args to steps
 
