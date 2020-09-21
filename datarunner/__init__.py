@@ -210,6 +210,7 @@ class Workflow(list):
         result = None
 
         for key, value in list(replacements.items()):
+            value = str(value)
             if '-' in value and (key + '_') not in replacements:
                 replacements[key + '_'] = value.replace('-', '')
 
