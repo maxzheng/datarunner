@@ -1,5 +1,10 @@
-Version 1.2.4
+Version 1.2.5
 ================================================================================
+
+* Convert to str before checking for value
+
+Version 1.2.4
+--------------------------------------------------------------------------------
 
 * Add special var to strip hyphen from replacement values
 
